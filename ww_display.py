@@ -1,7 +1,3 @@
-# Was taking ages to create/reset grids (8x8 would take 5s, 20x20 took like 40s or didn't happen at all
-# Restarting the vdi fixed this, now 32x32 takes 3.5s
-# So unsure if repeatedly running the code is clogging up memory, or just because vdi had been open for 4 days
-
 import copy
 import json
 import tkinter as tk
@@ -12,15 +8,12 @@ import ww_next
 
 style = ttk.Style()
 
-# activebackground and highlightbackground are meant to do something, but doesn't seem to work at all (on linux only?)
 style.configure("Squares0.TButton", font=("Arial", 20), relief="sunken")
 style.configure("Squares1.TButton", font=("Arial", 20), background="blue", foreground="grey")
 style.configure("Squares2.TButton", font=("Arial", 20), background="red")
 style.configure("Squares3.TButton", font=("Arial", 20), background="yellow")
 style.configure("NormalButtons.TButton", font=("Helvetica", 9))
 
-
-# screen_height = win.winfo_screenheight()
 
 class ArrayManager:
     instancelist = []
@@ -51,7 +44,6 @@ class GridButton(ttk.Button):
 
         self["padding"] = -2
         self["width"] = 2
-        # self["height"] = 2
 
         self.contents.set(str(self.val))
 
@@ -143,19 +135,15 @@ class StartStopButton(ttk.Button):
         if self.start == 0:  # if off, turn on
             self.startstop("a")
             self.start = 1
-            # print("starting")
             self.contents.set("Stop")
         else:
             self.after_cancel(self.running)
             self.start = 0
-            # print("stopping")
             self.contents.set("Start")
 
     def startstop(self, x):
         for instance in StartStopNumber.instancelist:
             timegap = instance.contents.get()
-        # timegap = 1  # in ms
-        # print("running")
         nextstage("a")
         self.running = self.after(timegap, self.startstop, "a")
 
@@ -409,8 +397,6 @@ class AddRowButton(ttk.Button):  # Used for the buttons that allow you to resize
         AddRowButton.instancelist.append(self)
 
         self["text"] = "+"
-        # if side == "top":
-        # print(side)
         self["width"] = 2
         self.bind("<Button-1>", self.add_row)
         self.bind("<space>", self.add_row)
@@ -419,7 +405,6 @@ class AddRowButton(ttk.Button):  # Used for the buttons that allow you to resize
 
     def add_row(self, x):
         side = self.side.get()
-        # print("This is an add button from:" + str(side))
 
         if side == "top":
             arrman.main_array.insert(0, [0, ] * len(arrman.main_array[0]))  # top
@@ -445,8 +430,6 @@ class RemoveRowButton(ttk.Button):  # Used for the buttons that allow you to res
         RemoveRowButton.instancelist.append(self)
 
         self["text"] = "-"
-        # if side == "top":
-        #     print(side)
         self["width"] = 2
         self.bind("<Button-1>", self.remove_row)
         self.bind("<space>", self.remove_row)
@@ -455,7 +438,6 @@ class RemoveRowButton(ttk.Button):  # Used for the buttons that allow you to res
 
     def remove_row(self, x):
         side = self.side.get()
-        # print("This is an add button from:" + str(side))
 
         if side == "bottom":
             if (len(arrman.main_array)) > 7:
@@ -472,7 +454,6 @@ class RemoveRowButton(ttk.Button):  # Used for the buttons that allow you to res
 
 
 def debuginfo(a):
-    # print("x:", self.x, "y:", self.y, "contents:", self.contents.get(),"style:", self["style"],)
     gridlist = GridButton.instancelist
     print("//////")
     for row in gridlist:
@@ -738,11 +719,6 @@ def stylescaling():
 
     for instance in GridButton.instancelist:
         instance.updatepadding((4 * fontmult) - 1.75)
-    # instance["width"] = fontmult*2
-    # instance["height"] = fontmult * 2
-
-    # print(fontmult)
-    # print(int(fontmult * 20))
 
     if int(fontmult * 20) <= 15:
         for instance in ResetButton.instancelist:
